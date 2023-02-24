@@ -9,10 +9,11 @@ import Logo from './Logo';
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    marginTop: 120,
+    marginTop: 'auto',
     borderTop: `1px solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
     }`,
+    backgroundColor: '#fff'
   },
 
   inner: {
@@ -33,7 +34,7 @@ const AppFooter = () => {
 
   return (
     <div className={classes.footer}>
-      <Text align="center" py="xl">
+      <Text fz={14} align="center" py="xl">
         &copy; {new Date().getFullYear()} TestifyApp
       </Text>
     </div>

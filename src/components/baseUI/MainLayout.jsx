@@ -3,30 +3,27 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import AppFooter from './Footer';
 import { AppHeader } from './Header';
-import PrivateRoute from './PrivateRoute';
 
 const MainLayout = () => {
   return (
-    <PrivateRoute>
       <Box
-        sx={{
+        sx={(theme) => ({
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
+          flexDirection: 'column'
+        })}
       >
         <AppHeader />
         <Container
           sx={{
             width: '100%',
+            marginBottom: '48px'
           }}
         >
           <Outlet />
         </Container>
         <AppFooter />
       </Box>
-    </PrivateRoute>
   );
 };
 

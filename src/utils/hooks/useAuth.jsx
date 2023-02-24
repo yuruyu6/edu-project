@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { useLocalStorage } from '@mantine/hooks';
+import { useLocalStorage } from './useLocalStorage';
 
 const authContext = createContext();
 
@@ -13,7 +13,7 @@ export const useAuth = () => {
 };
 
 export const useAuthProvider = () => {
-  const [user, setUser] = useLocalStorage({ key: 'user', defaultValue: false });
+  const [user, setUser] = useLocalStorage('user', false );
 
   const signup = (userData) => {
     setUser(userData);
@@ -23,9 +23,5 @@ export const useAuthProvider = () => {
     setUser(false);
   };
 
-  const getUser = () => { 
-    return user;
-  }
-
-  return { user, getUser, signup, signout };
+  return { user, signup, signout };
 };

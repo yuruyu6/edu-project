@@ -15,8 +15,9 @@ import {
 } from '@mantine/core';
 import { useForm } from 'react-hook-form';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { useAuth } from '../utils/hooks/useAuth';
+import { useAuth } from '../../utils/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { mathUserWithUrl } from '../../utils';
 
 const usersList = [
   { username: 'admin@gmail.com', password: 'admin', role: 'admin' },
@@ -42,9 +43,9 @@ const Login = () => {
       const findedUser = usersList.find((user) => user.username === data.email);
       if (findedUser) {
         signup(findedUser);
-        navigate('/');
+        navigate(mathUserWithUrl(findedUser));
       } else {
-        throw new Error('User not found')
+        throw new Error('User not found');
       }
     } catch (error) {
       setError('root.serverError', {
@@ -55,10 +56,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate(mathUserWithUrl(user));
     }
-  }, [user])
-  
+  }, [user]);
 
   return (
     <Container size={420} my={40}>
