@@ -29,7 +29,7 @@ const EditTask = () => {
 
   const [quizzesList, setQuizzesList] = useState(quizzes);
 
-  const { handleSubmit, register, control } = useForm({
+  const { handleSubmit, register, control, formState } = useForm({
     defaultValues: currentTask,
   });
 
@@ -77,7 +77,7 @@ const EditTask = () => {
                   <Text fz={14} fw={500} mb={8}>
                     Назва
                   </Text>
-                  <Input {...register('name')} />
+                  <Input {...register('name', { required: true })} />
                 </Box>
                 <Box mt={14}>
                   <Text fz={14} fw={500} mb={8}>
@@ -92,12 +92,16 @@ const EditTask = () => {
                   <Controller
                     name="visibility"
                     control={control}
+                    rules={{ required: true }}
                     render={({ field: { onChange, value, onBlur } }) => (
                       <Radio.Group
                         withAsterisk
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
+                        error={
+                          formState.errors.visibility && 'Оберіть значення'
+                        }
                       >
                         <Radio value="active" label="Опублікований" />
                         <Radio value="draft" label="Чернетка" />

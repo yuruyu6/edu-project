@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <Box
       component="a"
-      href="/"
+      href="/edu-project/"
       sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
     >
       <IconBook size={32} color="#228be6" />

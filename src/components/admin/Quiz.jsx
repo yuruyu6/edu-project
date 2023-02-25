@@ -119,24 +119,16 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
               <Text fz={14} fw={500} mb={8} mt={24}>
                 Варіанти відповідей
               </Text>
-              <Button
-                color="blue"
-                variant="outline"
-                onClick={(e) => onClickAddAnswerButton(e)}
-                type="submit"
-              >
-                Додати варіант
-              </Button>
             </Flex>
             {fields.map((answer, index) => (
               <Flex align="center" gap="sm" key={answer.id}>
                 <ActionIcon
                   color="blue"
                   variant="light"
-                  onClick={(e) =>
-                    {console.log(answer);
-                    onClickSetRightAnswerButtonForSingle(e, answer.fid)}
-                  }
+                  onClick={(e) => {
+                    console.log(answer);
+                    onClickSetRightAnswerButtonForSingle(e, answer.fid);
+                  }}
                   type="submit"
                 >
                   <IconReplace size={18} />
@@ -162,6 +154,32 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
                 </ActionIcon>
               </Flex>
             ))}
+            <Flex
+              align="center"
+              gap="sm"
+              sx={{
+                cursor: 'pointer',
+                opacity: 0.4,
+                transitionProperty: 'opacity',
+                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                transitionDuration: '150ms',
+
+                '&:hover': {
+                  opacity: 1,
+                },
+              }}
+              onClick={(e) => onClickAddAnswerButton(e)}
+            >
+              <ActionIcon color="blue" variant="light" disabled>
+                <IconReplace size={18} />
+              </ActionIcon>
+              <Input
+                mb={4}
+                readOnly
+                placeholder="Додати варіант"
+                icon={<IconSquare size={18} />}
+              />
+            </Flex>
           </>
         );
       case 'multiple':
@@ -171,14 +189,6 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
               <Text fz={14} fw={500} mb={8} mt={24}>
                 Варіанти відповідей
               </Text>
-              <Button
-                color="blue"
-                variant="outline"
-                onClick={(e) => onClickAddAnswerButton(e)}
-                type="submit"
-              >
-                Додати варіант
-              </Button>
             </Flex>
             {fields.map((answer, index) => (
               <Flex align="center" gap="sm" key={answer.id}>
@@ -213,6 +223,32 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
                 </ActionIcon>
               </Flex>
             ))}
+            <Flex
+              align="center"
+              gap="sm"
+              sx={{
+                cursor: 'pointer',
+                opacity: 0.4,
+                transitionProperty: 'opacity',
+                transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                transitionDuration: '150ms',
+
+                '&:hover': {
+                  opacity: 1,
+                },
+              }}
+              onClick={(e) => onClickAddAnswerButton(e)}
+            >
+              <ActionIcon color="blue" variant="light" disabled>
+                <IconReplace size={18} />
+              </ActionIcon>
+              <Input
+                mb={4}
+                readOnly
+                placeholder="Додати варіант"
+                icon={<IconSquare size={18} />}
+              />
+            </Flex>
           </>
         );
       case 'text':

@@ -51,9 +51,10 @@ const NewQuizForm = ({ setQuizzesList }) => {
       <Text align="center" mb={24} fw="500">
         Оберіть тип нового запитання
       </Text>
-      <Flex justify="space-around" wrap="wrap">
+      <Flex justify="space-around" gap="xs" wrap="wrap">
         <Button
           leftIcon={<IconCircleDot />}
+          size="xs"
           variant="outline"
           onClick={() => onClickAddSingleQuizButton()}
         >
@@ -61,6 +62,7 @@ const NewQuizForm = ({ setQuizzesList }) => {
         </Button>
         <Button
           leftIcon={<IconSquareCheck />}
+          size="xs"
           variant="outline"
           onClick={() => onClickAddMultipleQuizButton()}
         >
@@ -68,6 +70,7 @@ const NewQuizForm = ({ setQuizzesList }) => {
         </Button>
         <Button
           leftIcon={<IconTypography />}
+          size="xs"
           variant="outline"
           onClick={() => onClickAddShortQuizButton()}
         >
