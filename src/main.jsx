@@ -2,24 +2,24 @@ import { MantineProvider } from '@mantine/core';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
-  createBrowserRouter,
+  createHashRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider
+  RouterProvider,
 } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/auth/Login';
-import Logout from './pages/auth/Logout';
-import TaskDetails from './pages/student/TaskDetails';
-import StudentDashboard from './pages/student/StudentDashboard';
-import { AuthProvider } from './utils/hooks/useAuth';
 import MainLayout from './components/baseUI/MainLayout';
 import PrivateRoute from './components/baseUI/PrivateRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateTask from './pages/admin/CreateTask';
 import EditTask from './pages/admin/EditTask';
+import Login from './pages/auth/Login';
+import Logout from './pages/auth/Logout';
+import Home from './pages/Home';
+import StudentDashboard from './pages/student/StudentDashboard';
+import TaskDetails from './pages/student/TaskDetails';
+import { AuthProvider } from './utils/hooks/useAuth';
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Home />} />
