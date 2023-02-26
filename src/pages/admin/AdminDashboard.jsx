@@ -1,6 +1,7 @@
 import { Text } from '@mantine/core';
 import React from 'react';
 import AdminListOfTasks from '../../components/admin/AdminListOfTasks';
+import Students from '../../components/admin/Students';
 import { tasks } from '../../utils/mocks/mockedData';
 
 const AdminDashboard = () => {
@@ -10,6 +11,10 @@ const AdminDashboard = () => {
         Матеріали
       </Text>
       <AdminListOfTasks tasks={tasks} />
+      <Text size="xl" weight={700} mt={24}>
+        Студенти
+      </Text>
+      <Students />
       <Text size="xl" weight={700} mt={24}>
         Статистика
       </Text>

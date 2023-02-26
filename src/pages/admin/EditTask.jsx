@@ -120,7 +120,10 @@ const EditTask = () => {
                     render={({ field }) => (
                       <MultiSelect
                         {...field}
-                        data={groupsOfStudents}
+                        data={groupsOfStudents.map((group) => ({
+                          value: group.id,
+                          label: group.name,
+                        }))}
                         placeholder="Оберіть групи студентів"
                       />
                     )}

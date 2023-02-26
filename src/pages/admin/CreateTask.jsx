@@ -8,7 +8,7 @@ import {
   Radio,
   Space,
   Text,
-  Textarea
+  Textarea,
 } from '@mantine/core';
 import { IconArrowLeft, IconCheck } from '@tabler/icons-react';
 import React, { useState } from 'react';
@@ -26,6 +26,7 @@ const CreateTask = () => {
 
   const onSubmit = (data) => {
     console.log({ ...data, quiz: quizzesList });
+    navigate(-1)
   };
 
   return (
@@ -108,7 +109,10 @@ const CreateTask = () => {
                   render={({ field }) => (
                     <MultiSelect
                       {...field}
-                      data={groupsOfStudents}
+                      data={groupsOfStudents.map((group) => ({
+                        value: group.id,
+                        label: group.name,
+                      }))}
                       placeholder="Оберіть групи студентів"
                     />
                   )}
