@@ -177,7 +177,7 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
                 mb={4}
                 readOnly
                 placeholder="Додати варіант"
-                icon={<IconSquare size={18} />}
+                icon={<IconCircle size={18} />}
               />
             </Flex>
           </>
