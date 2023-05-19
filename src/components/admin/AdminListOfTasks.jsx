@@ -12,6 +12,7 @@ import {
 import {
   IconAd2,
   IconArrowBadgeRight,
+  IconFileAnalytics,
   IconPencil,
   IconPlus,
   IconTrash,
@@ -72,6 +73,14 @@ const AdminListOfTasks = ({ tasks }) => {
             </Box>
           </Flex>
           <Flex mt={32} justify="end" sx={{ gap: '0.4rem' }}>
+            <ActionIcon
+              component={Link}
+              to={'/a/test/stats/' + task.id}
+              color="grape"
+              variant="light"
+            >
+              <IconFileAnalytics size={18} />
+            </ActionIcon>
             <ActionIcon
               component={Link}
               to={'/a/test/edit/' + task.id}

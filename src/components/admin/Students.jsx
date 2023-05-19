@@ -18,19 +18,19 @@ const AccordionControl = (props) => {
     <Flex align="center">
       <Accordion.Control {...props} />
       <Box mr={12}>
-          <CopyButton value={props.inviteCode} timeout={2000}>
-            {({ copied, copy }) => (
-              <Tooltip
-                label={copied ? 'Скопійовано!' : 'Код доступу'}
-                withArrow
-                position="right"
-              >
-                <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
-                  {copied ? <IconCheck size={16} /> : <IconShare size={16} />}
-                </ActionIcon>
-              </Tooltip>
-            )}
-          </CopyButton>
+        <CopyButton value={props.inviteCode} timeout={2000}>
+          {({ copied, copy }) => (
+            <Tooltip
+              label={copied ? 'Скопійовано!' : 'Код доступу'}
+              withArrow
+              position="right"
+            >
+              <ActionIcon color={copied ? 'teal' : 'gray'} onClick={copy}>
+                {copied ? <IconCheck size={16} /> : <IconShare size={16} />}
+              </ActionIcon>
+            </Tooltip>
+          )}
+        </CopyButton>
       </Box>
     </Flex>
   );

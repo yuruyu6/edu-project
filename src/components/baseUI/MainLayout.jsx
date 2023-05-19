@@ -6,24 +6,25 @@ import { AppHeader } from './Header';
 
 const MainLayout = () => {
   return (
-      <Box
-        sx={(theme) => ({
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column'
-        })}
+    <Box
+      sx={() => ({
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
+      <AppHeader />
+      <Container
+        size="lg"
+        sx={{
+          width: '100%',
+          marginBottom: '48px',
+        }}
       >
-        <AppHeader />
-        <Container
-          sx={{
-            width: '100%',
-            marginBottom: '48px'
-          }}
-        >
-          <Outlet />
-        </Container>
-        <AppFooter />
-      </Box>
+        <Outlet />
+      </Container>
+      <AppFooter />
+    </Box>
   );
 };
 

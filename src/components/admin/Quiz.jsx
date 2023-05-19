@@ -262,7 +262,7 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
         );
 
       default:
-        return <div>oops, problem with quiz</div>;
+        return <div>Ой! Виникла проблема з питанням</div>;
     }
   };
 
