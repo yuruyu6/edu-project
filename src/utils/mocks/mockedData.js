@@ -124,6 +124,56 @@ export const quizzes = [
   },
 ];
 
+export const dashboardStatsData = [
+  {
+    id: 1,
+    testName: 'Тест №1',
+    studentName: 'Бабій А. Ю.',
+    group: 'КІ-21мс',
+    grade: '65/100',
+    createdAt: new Date(),
+  },
+  {
+    id: 2,
+    testName: 'Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2',
+    studentName: 'Бабій А. Ю.',
+    group: 'КІ-21мс',
+    grade: '80/100',
+    createdAt: new Date(),
+  },
+  {
+    id: 3,
+    testName: 'Тест №3',
+    studentName: 'Бабій А. Ю.',
+    group: 'КІ-21мс',
+    grade: '50/100',
+    createdAt: new Date(),
+  },
+  {
+    id: 4,
+    testName: 'Тест №4',
+    studentName: 'Бабій А. Ю.',
+    group: 'КІ-21мс',
+    grade: '36/100',
+    createdAt: new Date(),
+  },
+];
+
+export const segmentsStatData = [
+  {
+    label: 'З оцінкою',
+    color: '#12b886',
+    count: 18,
+    part: (18 / 30) * 100,
+  },
+  {
+    label: 'Не виконано',
+    color: '#fa5252',
+    count: 12,
+    part: (12 / 30) * 100,
+  },
+];
+
 export const groupsOfStudents = [
   {
     id: '1',

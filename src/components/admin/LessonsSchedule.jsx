@@ -1,5 +1,5 @@
-import { Box, Table, Text, createStyles } from '@mantine/core';
-import React from 'react';
+import { Box, ScrollArea, Table, Text, createStyles } from '@mantine/core';
+import React, { useState } from 'react';
 
 const lessonsTime = [
   '08:15 - 09:00',
@@ -95,17 +95,20 @@ const useStyles = createStyles((theme) => ({
   tableColumn: {
     minWidth: '190px',
   },
-  table: {
-    width: '100%',
+  tableHead: {
+    position: 'sticky',
+    top: 0,
+    backdropFilter: 'blur(8px)',
+    transition: 'box-shadow 150ms ease',
   },
-  tableWrapper: {
-    overflowX: 'auto',
-    width: '100%',
+  scrolled: {
+    boxShadow: theme.shadows.sm,
   },
 }));
 
 const LessonsSchedule = () => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
+  const [scrolled, setScrolled] = useState(false);
 
   const rows = lessonsTime.map((_, index) => {
     return (
@@ -126,25 +129,32 @@ const LessonsSchedule = () => {
   });
 
   return (
-    <Box mt={24} className={classes.tableWrapper}>
-      <Table
-        withColumnBorders
-        striped
-        verticalSpacing="xs"
-        className={classes.table}
+    <Box mt={24}>
+      <ScrollArea
+        h="70vh"
+        onScrollPositionChange={({ y }) => setScrolled(y !== 0)}
       >
-        <thead>
-          <tr>
-            <th></th>
-            <th className={classes.tableColumn}>Понеділок</th>
-            <th className={classes.tableColumn}>Вівторок</th>
-            <th className={classes.tableColumn}>Середа</th>
-            <th className={classes.tableColumn}>Четвер</th>
-            <th className={classes.tableColumn}>П'ятниця</th>
-          </tr>
-        </thead>
-        <tbody>{rows}</tbody>
-      </Table>
+        <Table
+          withColumnBorders
+          striped
+          verticalSpacing="xs"
+          className={classes.table}
+        >
+          <thead
+            className={cx(classes.tableHead, { [classes.scrolled]: scrolled })}
+          >
+            <tr>
+              <th></th>
+              <th className={classes.tableColumn}>Понеділок</th>
+              <th className={classes.tableColumn}>Вівторок</th>
+              <th className={classes.tableColumn}>Середа</th>
+              <th className={classes.tableColumn}>Четвер</th>
+              <th className={classes.tableColumn}>П'ятниця</th>
+            </tr>
+          </thead>
+          <tbody>{rows}</tbody>
+        </Table>
+      </ScrollArea>
     </Box>
   );
 };

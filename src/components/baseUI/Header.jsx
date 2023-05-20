@@ -24,7 +24,7 @@ export const AppHeader = () => {
 
   return (
     <Header height={60} mb={20}>
-      <Container className={classes.header}>
+      <Container className={classes.header} size="lg">
         <Logo />
 
         <Menu shadow="md" width={200}>

@@ -16,7 +16,7 @@ import StudentsTableThead from './studentsTable/StudentsTableThead';
 const AccordionControl = (props) => {
   return (
     <Flex align="center">
-      <Accordion.Control {...props} />
+      <Accordion.Control children={props.children} />
       <Box mr={12}>
         <CopyButton value={props.inviteCode} timeout={2000}>
           {({ copied, copy }) => (
