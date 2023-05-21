@@ -15,8 +15,6 @@ import EditTask from './pages/admin/EditTask';
 import Login from './pages/auth/Login';
 import Logout from './pages/auth/Logout';
 import Home from './pages/Home';
-import StudentDashboard from './pages/student/StudentDashboard';
-import TaskDetails from './pages/student/TaskDetails';
 import { AuthProvider } from './utils/hooks/useAuth';
 import TaskStats from './pages/admin/TaskStats';
 
@@ -32,10 +30,6 @@ const router = createHashRouter(
           <Route path="/a/test/create" element={<CreateTask />} />
           <Route path="/a/test/edit/:taskId" element={<EditTask />} />
           <Route path="/a/test/stats/:taskId" element={<TaskStats />} />
-        </Route>
-        <Route element={<PrivateRoute allowedRoles={['student']} />}>
-          <Route path="/u" element={<StudentDashboard />} />
-          <Route path="/u/task/:taskId" element={<TaskDetails />} />
         </Route>
       </Route>
     </>
