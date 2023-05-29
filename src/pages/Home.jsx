@@ -87,7 +87,7 @@ const Home = () => {
                 variant="gradient"
                 gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
               >
-                TESTIFY
+                QuizWiz
               </Text>
             </Title>
             <Text className={classes.description} mt={30}>

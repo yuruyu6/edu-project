@@ -17,6 +17,8 @@ import Logout from './pages/auth/Logout';
 import Home from './pages/Home';
 import { AuthProvider } from './utils/hooks/useAuth';
 import TaskStats from './pages/admin/TaskStats';
+import dayjs from 'dayjs';
+import 'dayjs/locale/uk'
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -35,6 +37,8 @@ const router = createHashRouter(
     </>
   )
 );
+
+dayjs.locale('uk')
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

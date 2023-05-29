@@ -21,7 +21,7 @@ const Logo = () => {
         variant="gradient"
         gradient={{ from: 'blue', to: 'cyan', deg: 45 }}
       >
-        TESTIFY
+        QuizWiz
       </Text>
     </Box>
   );

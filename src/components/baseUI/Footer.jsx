@@ -35,7 +35,7 @@ const AppFooter = () => {
   return (
     <div className={classes.footer}>
       <Text fz={14} align="center" py="xl">
-        &copy; {new Date().getFullYear()} TestifyApp
+        &copy; {new Date().getFullYear()} QuizWizApp
       </Text>
     </div>
   );
