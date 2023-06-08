@@ -29,7 +29,7 @@ const useStyles = createStyles((theme) => ({
   },
 
   content: {
-    paddingTop: theme.spacing.xl * 2,
+    paddingTop: 30 * 2,
     paddingBottom: theme.spacing.xl * 2,
     marginRight: theme.spacing.xl * 3,
 

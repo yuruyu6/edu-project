@@ -17,10 +17,33 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
+import { useMutation } from '@tanstack/react-query';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+const getVisibilityText = (visibility) => {
+  switch (visibility) {
+    case 'Active':
+      return 'Активний';
+    case 'Draft':
+      return 'Чернетка';
+    case 'Archived':
+      return 'Архівний';
+    default:
+      return 'Невідомий статус';
+  }
+};
+
 const AdminListOfTasks = ({ tasks }) => {
+ /*  const deleteMutation = useMutation({
+    mutationFn: (userId) => {
+      return api.delete(`/User/DeleteUser?userId=${userId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('dashboard');
+    },
+  }); */
+
   return tasks && tasks.length > 0 ? (
     <SimpleGrid
       mt={24}
@@ -47,8 +70,9 @@ const AdminListOfTasks = ({ tasks }) => {
           <IconPlus size={48} color="gray" />
         </Center>
       </Paper>
-      {tasks.map((task) => (
-        <Paper shadow="xs" p="sm" withBorder key={task.id}>
+
+      {tasks.map(({ task }) => (
+        <Paper shadow="xs" p="sm" withBorder key={task.taskId}>
           <Flex align="start">
             <Box>
               <IconArrowBadgeRight
@@ -59,23 +83,23 @@ const AdminListOfTasks = ({ tasks }) => {
             </Box>
             <Box w="100%" h="72px">
               <Badge
-                color={task.visibility === 'active' ? 'teal' : 'gray'}
+                color={task.visibility === 'Active' ? 'teal' : 'gray'}
                 sx={{ display: 'inline-block', width: '100%' }}
               >
-                {task.visibility === 'active' ? 'Активний' : 'Чернетка'}
+                {getVisibilityText(task.visibility)}
               </Badge>
               <Text size="sm" c="dimmed" fw="bold" lineClamp={1}>
-                {task.name}
+                {task.taskName}
               </Text>
               <Text size="sm" lineClamp={2}>
-                {task.description}
+                {task.taskDescription}
               </Text>
             </Box>
           </Flex>
           <Flex mt={32} justify="end" sx={{ gap: '0.4rem' }}>
             <ActionIcon
               component={Link}
-              to={'/a/test/stats/' + task.id}
+              to={'/a/test/stats/' + task.taskId}
               color="grape"
               variant="light"
             >
@@ -83,7 +107,7 @@ const AdminListOfTasks = ({ tasks }) => {
             </ActionIcon>
             <ActionIcon
               component={Link}
-              to={'/a/test/edit/' + task.id}
+              to={'/a/test/edit/' + task.taskId}
               color="yellow"
               variant="light"
             >

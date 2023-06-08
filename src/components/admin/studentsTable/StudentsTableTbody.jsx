@@ -5,7 +5,7 @@ const StudentsTableTbody = ({ studentsList }) => {
   return (
     <tbody>
       {studentsList.map((student) => (
-        <StudentsTableTr key={student.id} {...student} />
+        <StudentsTableTr key={student.userId} {...student} />
       ))}
     </tbody>
   );

@@ -2,13 +2,11 @@ import React, { useEffect } from 'react';
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
   Anchor,
   Paper,
   Title,
   Text,
   Container,
-  Group,
   Button,
   Popover,
   Alert,
@@ -18,15 +16,8 @@ import { IconAlertCircle } from '@tabler/icons-react';
 import { useAuth } from '../../utils/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { mathUserWithUrl } from '../../utils';
-
-const usersList = [
-  { username: 'admin@gmail.com', password: 'admin', role: 'admin' },
-  {
-    username: 'user@gmail.com',
-    password: 'user',
-    role: 'student',
-  },
-];
+import { useMutation } from '@tanstack/react-query';
+import { api } from '../../utils/api';
 
 const Login = () => {
   let navigate = useNavigate();
@@ -34,24 +25,26 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
     setError,
   } = useForm();
 
-  const onSubmit = (data) => {
-    try {
-      const findedUser = usersList.find((user) => user.username === data.email);
-      if (findedUser) {
-        signup(findedUser);
-        navigate(mathUserWithUrl(findedUser));
-      } else {
-        throw new Error('User not found');
-      }
-    } catch (error) {
+  const mutation = useMutation({
+    mutationFn: (credentials) => {
+      return api.post('/User/CheckUserCredentials', credentials);
+    },
+    onSuccess: ({ data }) => {
+      signup({ role: 'admin', ...data.data.userInfo });
+    },
+    onError: () => {
       setError('root.serverError', {
         type: '400',
       });
-    }
+    },
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate(data);
   };
 
   useEffect(() => {
@@ -69,7 +62,7 @@ const Login = () => {
             label="Email"
             placeholder="me@vntu.edu.ua"
             required
-            {...register('email')}
+            {...register('login')}
           />
           <PasswordInput
             label="Пароль"
@@ -98,7 +91,7 @@ const Login = () => {
             </Popover.Dropdown>
           </Popover>
 
-          <Button fullWidth mt="xl" type="submit">
+          <Button fullWidth mt="xl" type="submit" loading={mutation.isLoading}>
             Вхід
           </Button>
           {!isValid && (

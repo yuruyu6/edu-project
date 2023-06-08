@@ -1,20 +1,50 @@
 import { ActionIcon, Flex, Input } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import { api } from '../../../utils/api';
+import { queryClient } from '../../../utils/queryClient';
 
-const StudentsTableTr = ({ id, name }) => {
-  const [editFormData, setEditFormData] = useState({ id, name });
+const StudentsTableTr = ({ userId, firstName, lastName, fathersName }) => {
+  const editMutation = useMutation({
+    mutationFn: ({ userId, name }) => {
+      const [firstName, lastName, fathersName] = name.split(' ');
+      return api.post('/User/UpdateUserDemographic', {
+        userId,
+        firstName,
+        lastName,
+        fathersName: fathersName || '',
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('dashboard');
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (userId) => {
+      return api.delete(`/User/DeleteUser?userId=${userId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('dashboard');
+    },
+  });
+
+  const [editFormData, setEditFormData] = useState({
+    userId,
+    name: firstName + ' ' + lastName + ' ' + fathersName,
+  });
 
   const onChangeNameInput = (e) => {
     setEditFormData({ ...editFormData, name: e.target.value });
   };
 
   const onClickEditButton = () => {
-    console.log(editFormData, 'submit not implemented yet');
+    editMutation.mutate(editFormData);
   };
 
   const onClickDeleteButton = () => {
-    console.log(id, 'delete not implemented yet');
+    deleteMutation.mutate(userId);
   };
 
   return (

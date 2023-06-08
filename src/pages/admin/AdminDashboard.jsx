@@ -1,18 +1,36 @@
-import { Text } from '@mantine/core';
+import { Flex, Loader, Text } from '@mantine/core';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import AdminListOfTasks from '../../components/admin/AdminListOfTasks';
+import DashboardStats from '../../components/admin/DashboardStats';
 import LessonsSchedule from '../../components/admin/LessonsSchedule';
 import Students from '../../components/admin/Students';
-import { tasks } from '../../utils/mocks/mockedData';
-import DashboardStats from '../../components/admin/DashboardStats';
+import { api } from '../../utils/api';
 
 const AdminDashboard = () => {
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: () => {
+      return api.get('/AdminPanel/GetOverviewInfo');
+    },
+  });
+
+  if (isLoading || isError) {
+    return (
+      <Flex justify="center" mt={4}>
+        <Loader size="xl" variant="dots" />
+      </Flex>
+    );
+  }
+
+  const responce = data.data.data;
+
   return (
     <>
       <Text size="xl" weight={700}>
         Матеріали
       </Text>
-      <AdminListOfTasks tasks={tasks} />
+      <AdminListOfTasks tasks={responce.tasks} />
       <Text size="xl" weight={700} mt={24}>
         Статистика
       </Text>
@@ -20,7 +38,7 @@ const AdminDashboard = () => {
       <Text size="xl" weight={700} mt={24}>
         Студенти
       </Text>
-      <Students />
+      <Students groupsOfStudents={responce.groups} />
       <Text size="xl" weight={700} mt={24}>
         Розклад занять
       </Text>

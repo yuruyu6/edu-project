@@ -7,9 +7,11 @@ import {
   Grid,
   Group,
   Input,
+  Loader,
   MultiSelect,
   NumberInput,
   Radio,
+  Select,
   Space,
   Stack,
   Text,
@@ -24,32 +26,108 @@ import {
   IconCheck,
   IconSectionSign,
 } from '@tabler/icons-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import NewQuizForm from '../../components/admin/NewQuizForm';
 import Quiz from '../../components/admin/Quiz';
 import { groupsOfStudents } from '../../utils/mocks/mockedData';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { api } from '../../utils/api';
 
-const CreateTask = () => {
+const CreateTask = ({ isEditing }) => {
+  let { taskId } = useParams();
   const navigate = useNavigate();
   const [quizzesList, setQuizzesList] = useState([]);
+  const { handleSubmit, register, control, formState, reset } = useForm({
+    defaultValues: {
+      visibility: 'Active',
+      oneQuestionTime: 60,
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'topics',
+  });
 
-  const { handleSubmit, register, control, formState } = useForm();
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: 'topics',
-    }
-  );
+  useQuery({
+    enabled: !!isEditing,
+    queryKey: ['task'],
+    queryFn: () => {
+      return api.get(`/Task/GetTaskById?taskId=${taskId}`);
+    },
+    onSuccess: ({ data }) => {
+      const taskData = data.data;
+      reset({
+        ...data.data.task,
+        startTime: new Date(data.data.task.startTime),
+        assignedGroups: taskData.assignedGroups,
+        topics: taskData.task.topics.map((topic) => ({
+          value: topic.trim(),
+        })),
+      });
+    },
+  });
+
+  const { data: groupList } = useQuery({
+    queryKey: ['groupList'],
+    queryFn: () => {
+      return api.get(`/Group/GetAllGroupsList`);
+    },
+    select: ({ data }) => {
+      return data.data.map((group) => ({ value: group.id, label: group.name }));
+    },
+  });
+
+  const { data: subjectList } = useQuery({
+    queryKey: ['subjectList'],
+    queryFn: () => {
+      return api.get(`/Subject/GetAllSubjects`);
+    },
+    select: ({ data }) => {
+      return data.data.map((subject) => ({
+        value: subject.subjectId,
+        label: subject.subjectLongName,
+      }));
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: (formData) => {
+      return api.post('/Task/CreateTask', {
+        ...formData,
+        topics: formData.topics.map((topic) => topic.value),
+        maxPoints: 100,
+        startTime: new Date(),
+      });
+    },
+    onSuccess: () => {
+      navigate('/a');
+    },
+  });
+
+  const editMutation = useMutation({
+    mutationFn: (formData) => {
+      return api.post('/Task/UpdateTask', {
+        ...formData,
+        topics: formData.topics.map((topic) => topic.value),
+      });
+    },
+    onSuccess: () => {
+      navigate('/a');
+    },
+  });
 
   const onClickTopicDeleteButton = (index) => {
     remove(index);
   };
 
   const onSubmit = (data) => {
-    console.log({ ...data, quiz: quizzesList });
-    navigate(-1);
+    if (isEditing) {
+      editMutation.mutate(data);
+    } else {
+      createMutation.mutate(data);
+    }
   };
 
   return (
@@ -65,7 +143,7 @@ const CreateTask = () => {
               <IconArrowLeft size={24} />
             </ActionIcon>
             <Text ml={16} fw="bold" fz="lg">
-              Нове завдання
+              {isEditing ? 'Редагувати завдання' : ' Нове завдання'}
             </Text>
           </Flex>
           <ActionIcon size="lg" color="green" variant="filled" type="submit">
@@ -90,22 +168,38 @@ const CreateTask = () => {
               <Group grow>
                 <Box>
                   <Text fz={14} fw={500} mb={8}>
-                    Назва
+                    Назва*
                   </Text>
-                  <Input {...register('name', { required: true })} />
+                  <Input {...register('taskName', { required: true })} />
                 </Box>
                 <Box>
                   <Text fz={14} fw={500} mb={8}>
-                    Предмет
+                    Предмет*
                   </Text>
-                  <Input {...register('subject', { required: true })} />
+                  <Controller
+                    name="subjectId"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field: { onChange, value, onBlur } }) => (
+                      <Select
+                        placeholder="Оберіть предмет"
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        data={subjectList || []}
+                        error={
+                          formState.errors.visibility && 'Оберіть значення'
+                        }
+                      />
+                    )}
+                  />
                 </Box>
               </Group>
               <Box mt={14}>
                 <Text fz={14} fw={500} mb={8}>
                   Опис
                 </Text>
-                <Textarea autosize {...register('description')} />
+                <Textarea autosize {...register('taskDescription')} />
               </Box>
 
               <Box mt={14}>
@@ -121,7 +215,7 @@ const CreateTask = () => {
                       {...register(`topics.${index}.value`)}
                       rightSection={
                         <CloseButton
-                          onClick={() => onClickTopicDeleteButton(field.id)}
+                          onClick={() => onClickTopicDeleteButton(index)}
                         />
                       }
                     />
@@ -166,22 +260,39 @@ const CreateTask = () => {
                         }
                       >
                         <Group mt="lg">
-                          <Radio value="active" label="Опублікований" />
-                          <Radio value="draft" label="Чернетка" />
-                          <Radio value="archived" label="Архівний" />
+                          <Radio value="Active" label="Опублікований" />
+                          <Radio value="Draft" label="Чернетка" />
+                          <Radio value="Archived" label="Архівний" />
                         </Group>
                       </Radio.Group>
                     )}
                   />
                 </Box>
                 <Box>
+                  <Text fz={14} fw={500} mb={8}>
+                    Доступність
+                  </Text>
+                  <Controller
+                    name="assignedGroups"
+                    control={control}
+                    render={({ field }) => (
+                      <MultiSelect
+                        {...field}
+                        data={groupList || []}
+                        placeholder="Оберіть групи студентів"
+                      />
+                    )}
+                  />
+                </Box>
+              </Group>
+              <Group grow mt={14}>
+                <Box>
                   <Text fz={14} fw={500}>
                     Запланувати
                   </Text>
                   <Controller
-                    name="startDate"
+                    name="startTime"
                     control={control}
-                    rules={{ required: true }}
                     render={({ field: { onChange, value, onBlur } }) => (
                       <DateTimePicker
                         w="100%"
@@ -196,37 +307,16 @@ const CreateTask = () => {
                     )}
                   />
                 </Box>
-              </Group>
-              <Group grow mt={14}>
-                <Box>
-                  <Text fz={14} fw={500} mb={8}>
-                    Доступність
-                  </Text>
-                  <Controller
-                    name="groupsOfStudents"
-                    control={control}
-                    render={({ field }) => (
-                      <MultiSelect
-                        {...field}
-                        data={groupsOfStudents.map((group) => ({
-                          value: group.id,
-                          label: group.name,
-                        }))}
-                        placeholder="Оберіть групи студентів"
-                      />
-                    )}
-                  />
-                </Box>
                 <Box>
                   <Text fz={14} fw={500} mb={8}>
                     Час на питання (секунд)
                   </Text>
                   <Controller
-                    name="timeForQuestion"
+                    name="oneQuestionTime"
                     control={control}
                     render={({ field }) => (
                       <NumberInput
-                        name="timeForQuestion"
+                        name="oneQuestionTime"
                         defaultValue={60}
                         step={5}
                         placeholder="Вкажіть час на питання (в секундах)"

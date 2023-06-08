@@ -5,11 +5,11 @@ import {
   CopyButton,
   Flex,
   Table,
+  Text,
   Tooltip,
 } from '@mantine/core';
 import { IconCheck, IconShare } from '@tabler/icons-react';
 import React from 'react';
-import { groupsOfStudents } from '../../utils/mocks/mockedData';
 import StudentsTableTbody from './studentsTable/StudentsTableTbody';
 import StudentsTableThead from './studentsTable/StudentsTableThead';
 
@@ -36,18 +36,24 @@ const AccordionControl = (props) => {
   );
 };
 
-const Students = () => {
+const Students = ({ groupsOfStudents }) => {
   return (
     <Box mt={24}>
       <Accordion variant="separated" chevronPosition="left">
         {groupsOfStudents.map((group) => (
-          <Accordion.Item key={group.id} value={group.id}>
+          <Accordion.Item key={group.id} value={group.name}>
             <AccordionControl {...group}>{group.name}</AccordionControl>
             <Accordion.Panel>
-              <Table verticalSpacing="xs" fontSize="xs">
-                <StudentsTableThead />
-                <StudentsTableTbody studentsList={group.students} />
-              </Table>
+              {group?.students ? (
+                <Table verticalSpacing="xs" fontSize="xs">
+                  <StudentsTableThead />
+                  <StudentsTableTbody studentsList={group.students} />
+                </Table>
+              ) : (
+                <Text color="dimmed" align="center">
+                  Студенти відсутні
+                </Text>
+              )}
             </Accordion.Panel>
           </Accordion.Item>
         ))}

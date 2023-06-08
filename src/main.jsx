@@ -18,7 +18,9 @@ import Home from './pages/Home';
 import { AuthProvider } from './utils/hooks/useAuth';
 import TaskStats from './pages/admin/TaskStats';
 import dayjs from 'dayjs';
-import 'dayjs/locale/uk'
+import 'dayjs/locale/uk';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './utils/queryClient';
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -29,8 +31,8 @@ const router = createHashRouter(
       <Route path="/" element={<MainLayout />}>
         <Route element={<PrivateRoute allowedRoles={['admin']} />}>
           <Route path="/a" element={<AdminDashboard />} />
-          <Route path="/a/test/create" element={<CreateTask />} />
-          <Route path="/a/test/edit/:taskId" element={<EditTask />} />
+          <Route path="/a/test/create" element={<CreateTask isEditing={false}/>} />
+          <Route path="/a/test/edit/:taskId" element={<CreateTask isEditing={true} />} />
           <Route path="/a/test/stats/:taskId" element={<TaskStats />} />
         </Route>
       </Route>
@@ -38,10 +40,10 @@ const router = createHashRouter(
   )
 );
 
-dayjs.locale('uk')
+dayjs.locale('uk');
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <QueryClientProvider client={queryClient}>
     <MantineProvider
       theme={{ colorScheme: 'light' }}
       withGlobalStyles
@@ -51,5 +53,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <RouterProvider router={router} />
       </AuthProvider>
     </MantineProvider>
-  </React.StrictMode>
+  </QueryClientProvider>
 );
