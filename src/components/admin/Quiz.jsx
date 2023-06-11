@@ -26,6 +26,7 @@ import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { api } from '../../utils/api';
+import { queryClient } from '../../utils/queryClient';
 
 const Quiz = ({
   questionId,
@@ -58,6 +59,7 @@ const Quiz = ({
     control,
     setValue,
     watch,
+    reset,
     formState: { isDirty },
   } = useForm({
     defaultValues: {
@@ -76,7 +78,7 @@ const Quiz = ({
 
   const onClickAddAnswerButton = (e) => {
     e.preventDefault();
-    append({ fid: Date.now(), text: '' });
+    append({ fid: Math.floor(Math.random() * (500000 - 1 + 1)) + 1, text: '' });
   };
 
   const onClickSetRightAnswerButtonForSingle = (e, id) => {
@@ -117,8 +119,10 @@ const Quiz = ({
     if (data) {
       editMutation.mutate([
         {
-          ...data,
-          taskId: data.id,
+          questionTitle: data.title,
+          questionType: data.questionType,
+          rightAnswer: data.rightAnswer,
+          questionId: data.id,
           answers: data.answers.map((answer) => ({
             answerId: answer.fid,
             text: answer.text,
@@ -127,8 +131,10 @@ const Quiz = ({
       ]);
       console.log([
         {
-          ...data,
-          taskId: data.id,
+          questionTitle: data.title,
+          questionType: data.questionType,
+          rightAnswer: data.rightAnswer,
+          questionId: data.id,
           answers: data.answers.map((answer) => ({
             answerId: answer.fid,
             text: answer.text,
