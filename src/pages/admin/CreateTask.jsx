@@ -27,7 +27,7 @@ import {
   IconSectionSign,
 } from '@tabler/icons-react';
 import React, { useEffect, useState } from 'react';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { Controller, set, useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import NewQuizForm from '../../components/admin/NewQuizForm';
 import Quiz from '../../components/admin/Quiz';
@@ -58,9 +58,10 @@ const CreateTask = ({ isEditing }) => {
     },
     onSuccess: ({ data }) => {
       const taskData = data.data;
+      setQuizzesList(taskData.questions);
       reset({
-        ...data.data.task,
-        startTime: new Date(data.data.task.startTime),
+        ...taskData.task,
+        startTime: new Date(taskData.task.startTime),
         assignedGroups: taskData.assignedGroups,
         topics: taskData.task.topics.map((topic) => ({
           value: topic.trim(),
@@ -81,6 +82,7 @@ const CreateTask = ({ isEditing }) => {
 
   const { data: subjectList } = useQuery({
     queryKey: ['subjectList'],
+    cacheTime: Infinity,
     queryFn: () => {
       return api.get(`/Subject/GetAllSubjects`);
     },
@@ -108,7 +110,7 @@ const CreateTask = ({ isEditing }) => {
 
   const editMutation = useMutation({
     mutationFn: (formData) => {
-      return api.post('/Task/UpdateTask', {
+      return api.post('/Task/UpdateTaskInfo', {
         ...formData,
         topics: formData.topics.map((topic) => topic.value),
       });
@@ -351,11 +353,23 @@ const CreateTask = ({ isEditing }) => {
           <Grid.Col
             xs={7}
             sm={5}
-            style={{ display: 'grid', placeItems: 'center' }}
           >
-            <Title order={5} color="dimmed">
-              Розділ стане доступним після створення тесту
-            </Title>
+            {isEditing ? (
+              <>
+                {quizzesList.map((quiz) => (
+                  <Quiz
+                    key={quiz.questionId}
+                    setQuizzesList={setQuizzesList}
+                    {...quiz}
+                  />
+                ))}
+                <NewQuizForm setQuizzesList={setQuizzesList} taskId={taskId} />
+              </>
+            ) : (
+              <Title order={5} color="dimmed" align='center' mt={12}>
+                Розділ стане доступним після створення тесту
+              </Title>
+            )}
           </Grid.Col>
         </Grid>
       </Box>

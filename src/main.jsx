@@ -1,4 +1,7 @@
 import { MantineProvider } from '@mantine/core';
+import { QueryClientProvider } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import 'dayjs/locale/uk';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -11,15 +14,11 @@ import MainLayout from './components/baseUI/MainLayout';
 import PrivateRoute from './components/baseUI/PrivateRoute';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateTask from './pages/admin/CreateTask';
-import EditTask from './pages/admin/EditTask';
+import TaskStats from './pages/admin/TaskStats';
 import Login from './pages/auth/Login';
 import Logout from './pages/auth/Logout';
 import Home from './pages/Home';
 import { AuthProvider } from './utils/hooks/useAuth';
-import TaskStats from './pages/admin/TaskStats';
-import dayjs from 'dayjs';
-import 'dayjs/locale/uk';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './utils/queryClient';
 
 const router = createHashRouter(

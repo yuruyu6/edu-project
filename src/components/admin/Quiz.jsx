@@ -22,23 +22,48 @@ import {
   IconTrashX,
   IconX,
 } from '@tabler/icons-react';
+import { useMutation } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { api } from '../../utils/api';
 
-const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
-  const [isEditing, setIsEditing] = useState(true);
+const Quiz = ({
+  questionId,
+  questionType,
+  questionTitle,
+  answers,
+  rightAnswer,
+}) => {
+  const editMutation = useMutation({
+    mutationFn: (data) => {
+      return api.post(`/Task/UpdateQuestions`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('task');
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (questionId) => {
+      return api.delete(`/Task/DeleteQuestions?questionIds=${questionId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('task');
+    },
+  });
+
   const {
     handleSubmit,
     register,
     control,
     setValue,
     watch,
-    formState: { isDirty, isSubmitted },
+    formState: { isDirty },
   } = useForm({
     defaultValues: {
-      id: id,
-      type: type,
-      title: title,
+      id: questionId,
+      questionType: questionType,
+      title: questionTitle,
       answers: answers,
       rightAnswer: rightAnswer,
     },
@@ -84,35 +109,38 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
 
   const onClickDeleteButton = () => {
     if (window.confirm('Ви впевнені?')) {
-      setQuizzesList((prev) => prev.filter((quiz) => quiz.id !== id));
+      deleteMutation.mutate(questionId);
     }
   };
 
-  /*   const deleteEmptyAnswers = () => {
-    answers.forEach((answer, index) => {
-      if (answer.text === '') {
-        remove(index);
-      }
-    });
-  }; */
-
   const onSubmit = (data) => {
     if (data) {
-      setQuizzesList((prev) => {
-        const updatedQuizzes = prev.map((quiz) => {
-          if (quiz.id === id) {
-            return { ...data };
-          }
-          return quiz;
-        });
-        return updatedQuizzes;
-      });
+      editMutation.mutate([
+        {
+          ...data,
+          taskId: data.id,
+          answers: data.answers.map((answer) => ({
+            answerId: answer.fid,
+            text: answer.text,
+          })),
+        },
+      ]);
+      console.log([
+        {
+          ...data,
+          taskId: data.id,
+          answers: data.answers.map((answer) => ({
+            answerId: answer.fid,
+            text: answer.text,
+          })),
+        },
+      ]);
     }
   };
 
   const getQuizEditingFormByType = () => {
-    switch (type) {
-      case 'single':
+    switch (questionType) {
+      case 'Single':
         return (
           <>
             <Flex align="center" justify="space-between">
@@ -182,7 +210,7 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
             </Flex>
           </>
         );
-      case 'multiple':
+      case 'Multiple':
         return (
           <>
             <Flex align="center" justify="space-between">
@@ -206,7 +234,7 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
                   mb={4}
                   {...register(`answers.${index}.text`)}
                   icon={
-                    watch('rightAnswer').includes(Number(answer.fid)) ? (
+                    watch('rightAnswer')?.includes(Number(answer.fid)) ? (
                       <IconSquareCheckFilled size={18} />
                     ) : (
                       <IconSquare size={18} />
@@ -245,13 +273,13 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
               <Input
                 mb={4}
                 readOnly
-                placeholder="Додати варіант"
+                placeholder="Додати варіант1"
                 icon={<IconSquare size={18} />}
               />
             </Flex>
           </>
         );
-      case 'text':
+      case 'Text':
         return (
           <Box mt={24}>
             <Text fz={14} fw={500} mb={8}>
@@ -270,7 +298,7 @@ const Quiz = ({ id, type, title, answers, rightAnswer, setQuizzesList }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Paper mb={24} withBorder p={12}>
         <Flex justify="end" gap={4}>
-          <Button color="red" onClick={() => onClickDeleteButton(id)}>
+          <Button color="red" onClick={() => onClickDeleteButton(questionId)}>
             <IconTrashX size={16} />
           </Button>
           <Button

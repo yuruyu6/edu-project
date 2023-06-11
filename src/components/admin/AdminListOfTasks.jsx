@@ -2,12 +2,11 @@ import {
   ActionIcon,
   Badge,
   Box,
-  Button,
   Center,
   Flex,
   Paper,
   SimpleGrid,
-  Text,
+  Text
 } from '@mantine/core';
 import {
   IconAd2,
@@ -20,6 +19,8 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../../utils/api';
+import { queryClient } from '../../utils/queryClient';
 
 const getVisibilityText = (visibility) => {
   switch (visibility) {
@@ -35,14 +36,20 @@ const getVisibilityText = (visibility) => {
 };
 
 const AdminListOfTasks = ({ tasks }) => {
- /*  const deleteMutation = useMutation({
-    mutationFn: (userId) => {
-      return api.delete(`/User/DeleteUser?userId=${userId}`);
+  const deleteMutation = useMutation({
+    mutationFn: (taskId) => {
+      return api.delete(`/Task/DeleteTaskById?taskId=${taskId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries('dashboard');
     },
-  }); */
+  });
+
+  const onClickDeleteButton = (taskId) => {
+    if (confirm('Ви впевнені, що хочете видалити це завдання?')) {
+      deleteMutation.mutate(taskId);
+    }
+  };
 
   return tasks && tasks.length > 0 ? (
     <SimpleGrid
@@ -113,7 +120,11 @@ const AdminListOfTasks = ({ tasks }) => {
             >
               <IconPencil size={18} />
             </ActionIcon>
-            <ActionIcon color="red" variant="light">
+            <ActionIcon
+              color="red"
+              variant="light"
+              onClick={() => onClickDeleteButton(task.taskId)}
+            >
               <IconTrash size={18} />
             </ActionIcon>
           </Flex>

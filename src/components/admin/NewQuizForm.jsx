@@ -1,53 +1,45 @@
-import { Button, Flex, Paper, Text } from '@mantine/core';
+import { Button, Flex, LoadingOverlay, Paper, Text } from '@mantine/core';
 import {
-    IconCircleDot,
-    IconSquareCheck,
-    IconTypography
+  IconCircleDot,
+  IconSquareCheck,
+  IconTypography,
 } from '@tabler/icons-react';
+import { useMutation } from '@tanstack/react-query';
 import React from 'react';
+import { api } from '../../utils/api';
+import { queryClient } from '../../utils/queryClient';
 
-const NewQuizForm = ({ setQuizzesList }) => {
+const NewQuizForm = ({ taskId }) => {
+  const addMutation = useMutation({
+    mutationFn: (questionType) => {
+      return api.post('/Task/CreateQuestions', [
+        {
+          questionType: questionType,
+          questionTitle: 'Вкажіть питання',
+          taskId: taskId,
+        },
+      ]);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('task');
+    },
+  });
+
   const onClickAddSingleQuizButton = () => {
-    setQuizzesList((prevState) => [
-      ...prevState,
-      {
-        id: Date.now(),
-        type: 'single',
-        title: undefined,
-        answers: [{ fid: Date.now(), text: '' }],
-        rightAnswer: undefined,
-      },
-    ]);
+    addMutation.mutate('Single');
   };
 
   const onClickAddMultipleQuizButton = () => {
-    setQuizzesList((prevState) => [
-      ...prevState,
-      {
-        id: Date.now(),
-        type: 'multiple',
-        title: undefined,
-        answers: [{ fid: Date.now(), text: '' }],
-        rightAnswer: [],
-      },
-    ]);
+    addMutation.mutate('Multiple');
   };
 
   const onClickAddShortQuizButton = () => {
-    setQuizzesList((prevState) => [
-      ...prevState,
-      {
-        id: Date.now(),
-        type: 'text',
-        title: undefined,
-        answers: undefined,
-        rightAnswer: undefined,
-      },
-    ]);
+    addMutation.mutate('Text');
   };
 
   return (
-    <Paper withBorder py={48}>
+    <Paper withBorder py={48} pos="relative">
+      <LoadingOverlay visible={addMutation.isLoading} overlayBlur={2} />
       <Text align="center" mb={24} fw="500">
         Оберіть тип нового запитання
       </Text>
