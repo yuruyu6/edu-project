@@ -20,18 +20,26 @@ import Logout from './pages/auth/Logout';
 import Home from './pages/Home';
 import { AuthProvider } from './utils/hooks/useAuth';
 import { queryClient } from './utils/queryClient';
+import Register from './pages/auth/Register';
 
 const router = createHashRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/" element={<MainLayout />}>
         <Route element={<PrivateRoute allowedRoles={['admin']} />}>
           <Route path="/a" element={<AdminDashboard />} />
-          <Route path="/a/test/create" element={<CreateTask isEditing={false}/>} />
-          <Route path="/a/test/edit/:taskId" element={<CreateTask isEditing={true} />} />
+          <Route
+            path="/a/test/create"
+            element={<CreateTask isEditing={false} />}
+          />
+          <Route
+            path="/a/test/edit/:taskId"
+            element={<CreateTask isEditing={true} />}
+          />
           <Route path="/a/test/stats/:taskId" element={<TaskStats />} />
         </Route>
       </Route>

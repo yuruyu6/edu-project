@@ -47,7 +47,17 @@ const Students = ({ groupsOfStudents }) => {
               {group?.students ? (
                 <Table verticalSpacing="xs" fontSize="xs">
                   <StudentsTableThead />
-                  <StudentsTableTbody studentsList={group.students} />
+                  <StudentsTableTbody
+                    studentsList={group.students.sort(function (a, b) {
+                      if (a.firstName < b.firstName) {
+                        return -1;
+                      }
+                      if (a.firstName > b.firstName) {
+                        return 1;
+                      }
+                      return 0;
+                    })}
+                  />
                 </Table>
               ) : (
                 <Text color="dimmed" align="center">

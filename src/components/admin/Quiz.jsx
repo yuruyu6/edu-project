@@ -279,7 +279,7 @@ const Quiz = ({
               <Input
                 mb={4}
                 readOnly
-                placeholder="Додати варіант1"
+                placeholder="Додати варіант"
                 icon={<IconSquare size={18} />}
               />
             </Flex>

@@ -110,8 +110,8 @@ export const dashboardStatsData = [
   },
   {
     id: 2,
-    testName: 'Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2 Тест №2',
-    studentName: 'Бабій А. Ю.',
+    testName: 'Тест №2',
+    studentName: 'Іванов І. І.',
     group: 'КІ-21мс',
     grade: '80/100',
     createdAt: new Date(),
@@ -119,7 +119,7 @@ export const dashboardStatsData = [
   {
     id: 3,
     testName: 'Тест №3',
-    studentName: 'Бабій А. Ю.',
+    studentName: 'Бузинюк Д. М.',
     group: 'КІ-21мс',
     grade: '50/100',
     createdAt: new Date(),
@@ -127,9 +127,9 @@ export const dashboardStatsData = [
   {
     id: 4,
     testName: 'Тест №4',
-    studentName: 'Бабій А. Ю.',
+    studentName: 'Гром Ю. С.',
     group: 'КІ-21мс',
-    grade: '36/100',
+    grade: '95/100',
     createdAt: new Date(),
   },
 ];

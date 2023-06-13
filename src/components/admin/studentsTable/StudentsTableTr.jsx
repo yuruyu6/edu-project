@@ -14,6 +14,7 @@ const StudentsTableTr = ({ userId, firstName, lastName, fathersName }) => {
         firstName,
         lastName,
         fathersName: fathersName || '',
+        dateOfBirth: '2022-08-08',
       });
     },
     onSuccess: () => {
